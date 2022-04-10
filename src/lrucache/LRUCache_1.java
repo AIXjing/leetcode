@@ -1,7 +1,13 @@
 package lrucache;
 
+/** @source: https://leetcode.com/problems/lru-cache/
+ * @Jing
+ * method 1: create a hashMap to map key and node O(3-5)
+ * */
+
 import java.util.HashMap;
-import java.util.Optional;
+import java.util.Map;
+import java.util.Objects;
 
 class LRUCache_1 {
     private HashNode sentinel;
@@ -11,9 +17,6 @@ class LRUCache_1 {
 
     // a deque structure
     public LRUCache_1(int capacity) {
-        if (capacity <  1 || capacity > 3000) {
-            throw new IllegalArgumentException("capacity should be [1,3000]");
-        }
         sentinel = new HashNode(null, null, null);
         hashNodeMap = new HashMap<>();
         sentinel.prev = sentinel;
@@ -22,61 +25,55 @@ class LRUCache_1 {
         this.capacity = capacity;
     }
 
-    // get the key-value pair and put them to the first
+    // get the value and put key-HashNode map to the first in the queue
     public int get(int key) {
-        HashNode target = find(key);
+        HashNode target = hashNodeMap.get(key);
         if (target == null) {
             return -1;
+        } else if (target.value == null) {
+            return -1;
         }
-        remove(target);
-        int value = target.pair.get(key);
-        // add the target node to the first;
+        int value = removeFromQueue(target);
+        hashNodeMap.remove(key);
         put(key, value);
         return value;
     }
 
-    // find the HashNode with the key
-    private HashNode find(int key) {
-        return hashNodeMap.get(key);
-    }
-
     // remove the HashNode with the key
-    private void remove(HashNode target) {
+    private Integer removeFromQueue(HashNode target) {
         // connect HashNode before and after the target Node
         HashNode targetPrev = target.prev;
         HashNode targetNext = target.next;
         targetPrev.next = targetNext;
         targetNext.prev = targetPrev;
+        int value = target.value;
         target.next = null;
         target.prev = null;
+        target = null;
         size -= 1;
-
-        removeKeyInMap(target);
+        return value;
     }
 
     // put HashNode with (key,value) to the first
     // if key exists, update the value
     public void put(int key, int value) { // equal to addFirst
-        if (key < 0 || key > 10000 || value < 0 || value > 100000) {
-            throw new IllegalArgumentException("not valid key or value");
+        if (hashNodeMap.get(key) != null) {
+            if (hashNodeMap.get(key).value == null) {
+                hashNodeMap.remove(key);
+            } else {
+                removeFromQueue(hashNodeMap.get(key));
+            }
         }
-        HashNode repNode = find(key);
-        if(repNode != null) {
-            remove(repNode);
-        }
-        if (this.size == this.capacity) {
+        HashNode oldHead = sentinel;
+        HashNode oldFirst = sentinel.next;
+        HashNode newHashNode = new HashNode(value, oldHead, oldFirst);
+        oldHead.next = newHashNode;
+        oldFirst.prev = oldHead.next;
+        size += 1;
+        hashNodeMap.put(key,newHashNode);
+        if (size > this.capacity) {
             removeLast();
         }
-        HashNode p = sentinel;
-        HashNode n = sentinel.next;
-        HashMap<Integer, Integer> pair = new HashMap<>();
-        pair.put(key, value);
-        HashNode newHashNode = new HashNode(pair, p, n);
-        p.next = newHashNode;
-        n.prev = p.next;
-        size += 1;
-
-        hashNodeMap.put(key,newHashNode);
     }
 
     private void removeLast() {
@@ -84,30 +81,31 @@ class LRUCache_1 {
         HashNode newLast = lastNode.prev;
         newLast.next = sentinel;
         sentinel.prev = newLast;
-        lastNode.next = null;
         lastNode.prev = null;
-
-        removeKeyInMap(lastNode);
+        lastNode.next = null;
+        lastNode.value = null;
         size -= 1;
     }
 
+    private static<T, E> T getKeyByValue(HashMap<T, E> map, E value) {
+        for (Map.Entry<T, E> entry : map.entrySet()) {
+            if (Objects.equals(value, entry.getValue())) {
+                return entry.getKey();
+            }
+        }
+        return null;
+    }
+
     // nested HashNode class
-    private class HashNode {
-        private HashMap<Integer, Integer> pair;
+    class HashNode {
+        private Integer value;
         HashNode prev;
         HashNode next;
 
-        public HashNode (HashMap<Integer, Integer> pair, HashNode prev, HashNode next) {
-            this.pair = pair;
+        public HashNode (Integer v, HashNode prev, HashNode next) {
+            this.value = v;
             this.prev = prev;
             this.next = next;
-        }
-    }
-
-    // remote <key, hashNode> in hashNodeMap
-    private void removeKeyInMap(HashNode targetNode) {
-        for (Integer k : targetNode.pair.keySet()) {
-            hashNodeMap.remove(k);
         }
     }
 }

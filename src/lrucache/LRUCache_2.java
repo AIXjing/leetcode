@@ -2,22 +2,24 @@ package lrucache;
 
 /** @source: https://leetcode.com/problems/lru-cache/
  * @Jing
- * method 0: brutal search O(n)
+ * method 2: use key as index to store the node in an array O(1)
  * */
 
 import java.util.HashMap;
 
-class LRUCache_0 {
+public class LRUCache_2 {
     private HashNode sentinel;
+    private HashNode[] keys;
     private final int capacity;
     private int size;
 
     // a deque structure
-    public LRUCache_0(int capacity) {
+    public LRUCache_2 (int capacity) {
         if (capacity <  1 || capacity > 3000) {
             throw new IllegalArgumentException("capacity should be [1,3000]");
         }
         sentinel = new HashNode(null, null, null);
+        keys = new HashNode[10];
         sentinel.prev = sentinel;
         sentinel.next = sentinel;
         this.size = 0;
@@ -26,31 +28,14 @@ class LRUCache_0 {
 
     // get the key-value pair and put them to the first
     public int get(int key) {
-        HashNode target = find(key);
-        if (target == null) {
+        if (keys[key] == null) {
             return -1;
         }
-        remove(target);
+        HashNode target = keys[key];
         int value = target.pair.get(key);
-        // add the target node to the first;
-        put(key, value);
+        remove(target);
+        put(key,value);
         return value;
-    }
-
-    // find the HashNode with the key
-    private HashNode find(int key) {
-        // the basic method to find the pair with the key: O(n)
-        HashNode target = null;
-        HashNode startNode = sentinel.next;
-        HashMap<Integer, Integer> pairToCompair = startNode.pair;
-        while (pairToCompair != null) {
-            if (pairToCompair.containsKey(key)) {
-                target = startNode;
-            }
-            startNode = startNode.next;
-            pairToCompair = startNode.pair;
-        }
-        return target;
     }
 
     // remove the HashNode with the key
@@ -63,6 +48,7 @@ class LRUCache_0 {
         target.next = null;
         target.prev = null;
         size -= 1;
+        removeHashNodeInArrays(target);
     }
 
     // put HashNode with (key,value) to the first
@@ -71,7 +57,7 @@ class LRUCache_0 {
         if (key < 0 || key > 10000 || value < 0 || value > 100000) {
             throw new IllegalArgumentException("not valid key or value");
         }
-        HashNode repNode = find(key);
+        HashNode repNode = keys[key];
         if(repNode != null) {
             remove(repNode);
         }
@@ -82,9 +68,11 @@ class LRUCache_0 {
         HashNode n = sentinel.next;
         HashMap<Integer, Integer> pair = new HashMap<>();
         pair.put(key, value);
-        p.next = new HashNode(pair, p, n);
+        HashNode newHashNode = new HashNode(pair, p, n);
+        p.next = newHashNode;
         n.prev = p.next;
         size += 1;
+        keys[key] = newHashNode;
     }
 
     private void removeLast() {
@@ -92,6 +80,10 @@ class LRUCache_0 {
         HashNode newLast = lastNode.prev;
         newLast.next = sentinel;
         sentinel.prev = newLast;
+        lastNode.next = null;
+        lastNode.prev = null;
+
+        removeHashNodeInArrays(lastNode);
         size -= 1;
     }
 
@@ -107,5 +99,12 @@ class LRUCache_0 {
             this.next = next;
         }
     }
-}
 
+    // remote <key, hashNode> in hashNodeMap
+    private void removeHashNodeInArrays(HashNode targetNode) {
+        for (Integer k : targetNode.pair.keySet()) {
+            keys[k] = null;
+        }
+    }
+
+}
