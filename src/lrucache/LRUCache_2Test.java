@@ -28,4 +28,16 @@ public class LRUCache_2Test {
         System.out.println(lruCache2.get(3));
         System.out.println(lruCache2.get(4));
     }
+
+    @Test
+    public void testLRUCache6() {
+        LRUCache_2 lruCache2 = new LRUCache_2(1);
+        lruCache2.put(12,1);
+        lruCache2.put(15,11);
+        lruCache2.put(5,2);
+        lruCache2.put(1,15);
+        lruCache2.put(4,2);
+        System.out.println(lruCache2.get(5));
+        lruCache2.put(15,15);
+    }
 }

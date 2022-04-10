@@ -49,7 +49,6 @@ class LRUCache_1 {
         int value = target.value;
         target.next = null;
         target.prev = null;
-        target = null;
         size -= 1;
         return value;
     }
@@ -87,14 +86,6 @@ class LRUCache_1 {
         size -= 1;
     }
 
-    private static<T, E> T getKeyByValue(HashMap<T, E> map, E value) {
-        for (Map.Entry<T, E> entry : map.entrySet()) {
-            if (Objects.equals(value, entry.getValue())) {
-                return entry.getKey();
-            }
-        }
-        return null;
-    }
 
     // nested HashNode class
     class HashNode {
