@@ -1,5 +1,7 @@
-import java.util.ArrayList;
-import java.util.HashMap;
+/**
+ * @Source: https://leetcode.com/problems/contains-duplicate/
+ */
+
 import java.util.HashSet;
 import java.util.Set;
 

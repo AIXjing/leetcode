@@ -1,7 +1,9 @@
-import java.util.ArrayList;
-import java.util.HashMap;
+/**
+ * @Source: https://leetcode.com/problems/maximum-subarray/
+ */
 
-import static java.lang.Math.max;
+
+import java.util.HashMap;
 
 public class MaxSubarray {
     // calculate all the sums O(n2)
