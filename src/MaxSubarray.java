@@ -1,5 +1,6 @@
 /**
  * @Source: https://leetcode.com/problems/maximum-subarray/
+ * similar to https://leetcode.com/problems/best-time-to-buy-and-sell-stock/
  */
 
 
