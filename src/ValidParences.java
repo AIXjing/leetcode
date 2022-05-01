@@ -1,3 +1,5 @@
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Stack;
 
 /**
@@ -20,8 +22,23 @@ public class ValidParences {
         return stack.empty();
     }
 
+    public static boolean isValidLinkedList(String s) {
+        if (s.isEmpty()) return false;
+        List<Character> li = new LinkedList<>();
+        for (char c : s.toCharArray()) {
+            if (c == '(') li.add(')');
+            else if (c == '[') li.add(']');
+            else if (c == '{') li.add('}');
+            // if the first character in string is ']', ')' or '}', the li must be empty.
+            else if (li.isEmpty() || li.remove(li.size() - 1) != c) {
+                return false;
+            }
+        }
+        return li.isEmpty();
+    }
+
     public static void main(String[] args) {
-        String s = "()[";
-        System.out.println(isValid(s));
+        String s = "";
+        System.out.println(isValidLinkedList(s));
     }
 }
