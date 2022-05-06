@@ -48,7 +48,7 @@ class PostorderTraversal {
                 TreeNode<Integer> parentNode = stack.pop();
                 currNode = parentNode.right;
             }
-        } 
+        }
         return result;
     }
 
@@ -72,18 +72,4 @@ class PostorderTraversal {
         Assert.assertEquals("[5, 4, 3, 6, 2, 1]", Arrays.toString(postorderTraversal(a).toArray()));
         Assert.assertEquals("[5, 4, 3, 6, 2, 1]", Arrays.toString(postorderTraversalStack(a).toArray()));
     }
-
-    // Definition for a binary tree node.
-    static class TreeNode<T> {
-      T val;
-      TreeNode<T> left;
-      TreeNode<T> right;
-      TreeNode() {}
-      TreeNode(T val) { this.val = val; }
-      TreeNode(T val, TreeNode<T> left, TreeNode<T> right) {
-          this.val = val;
-          this.left = left;
-          this.right = right;
-      }
-  }
 }

@@ -78,18 +78,4 @@ class PreorderTraversal {
         Assert.assertEquals("[1, 4, 5, 2, 3, 6]", Arrays.toString(preorderTraversalStack(a).toArray()));
         Assert.assertEquals("[1, 4, 5, 2, 3, 6]", Arrays.toString(reorderTraversalIter2(a).toArray()));
     }
-
-    // Definition for a binary tree node.
-    static class TreeNode<T> {
-      T val;
-      TreeNode<T> left;
-      TreeNode<T> right;
-      TreeNode() {}
-      TreeNode(T val) { this.val = val; }
-      TreeNode(T val, TreeNode<T> left, TreeNode<T> right) {
-          this.val = val;
-          this.left = left;
-          this.right = right;
-      }
-  }
 }

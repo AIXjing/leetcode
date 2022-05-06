@@ -84,18 +84,4 @@ public class BSTOrderPractice {
                 "[a, b, c, d, e, f]",
                 Arrays.toString(breadthFirstTraversal_Iteration(a).toArray()));
     }
-
-    // Definition for a binary tree node.
-    private static class TreeNode<T> {
-        T val;
-        TreeNode<T> left;
-        TreeNode<T> right;
-        TreeNode() {}
-        TreeNode(T val) { this.val = val; }
-        TreeNode(T val, TreeNode<T> left, TreeNode<T> right) {
-            this.val = val;
-            this.left = left;
-            this.right = right;
-        }
-    }
 }

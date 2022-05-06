@@ -83,17 +83,4 @@ public class InorderTraversal {
         Assert.assertEquals("[5, 4, 1, 3, 2, 6]", Arrays.toString(inorderTraversalIter2(a).toArray()));
     }
 
-    // Definition for a binary tree node.
-    static class TreeNode<T> {
-        T val;
-        TreeNode<T> left;
-        TreeNode<T> right;
-        TreeNode() {}
-        TreeNode(T val) { this.val = val; }
-        TreeNode(T val, TreeNode<T> left, TreeNode<T> right) {
-            this.val = val;
-            this.left = left;
-            this.right = right;
-        }
-    }
 }
