@@ -1,4 +1,4 @@
-package BSTPrac; /**
+package TreePrac; /**
  * @source: https://www.youtube.com/watch?v=fAAZixBzIAI
  * @description: detailed explanation to binary tree
  */

@@ -1,4 +1,4 @@
-package BSTPrac;
+package TreePrac;
 
 import org.junit.Assert;
 

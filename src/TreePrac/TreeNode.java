@@ -2,7 +2,7 @@
  * Fundamental element of Binary tree
  * defined by Leetcode, applying to all the classes in this package
  */
-package BSTPrac;
+package TreePrac;
 class TreeNode<T> {
     T val;
     TreeNode<T> left;
