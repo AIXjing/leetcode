@@ -26,39 +26,58 @@ public class InorderTraversal {
         return result;
     }
 
-    // using iteration - method 1
-    public static List<Integer> inorderTraversalIter(TreeNode root) {
+    // using iteration with stack
+    public static List<Integer> inorderTraversalStack(TreeNode<Integer> root) {
         List<Integer> list = new ArrayList<>();
-        Stack<TreeNode> stack = new Stack<>();
-        TreeNode currNode = root;
-        while(currNode!=null || !stack.empty()){
-            while(currNode!=null){
-                stack.add(currNode);
+        Stack<TreeNode<Integer>> stack = new Stack<>();
+        TreeNode<Integer> currNode = root;
+        while (currNode != null || !stack.empty()) {
+            // traverse along the left edge to the bottom
+            while (currNode != null) {
+                stack.push(currNode);
                 currNode = currNode.left;
             }
+            // pop each node from the stack and add value to the list
             currNode = stack.pop();
-            list.add((Integer) currNode.val);
+            list.add(currNode.val);
+            // push the right child of the node to the stack
             currNode = currNode.right;
         }
         return list;
     }
 
-    // using iteration - method 2: using a pointer node and a parent node
+    // Above method can also be written as follows
     public static List<Integer> inorderTraversalIter2(TreeNode<Integer> root) {
         List<Integer> list = new ArrayList<>();
         Stack<TreeNode<Integer>> stack = new Stack<>();
         TreeNode<Integer> currNode = root;
         while(currNode!=null || !stack.empty()){
+            // traverse along the left edge to the bottom
             if (currNode != null) {
                 stack.push(currNode);
                 currNode = currNode.left;
             } else {
-                TreeNode<Integer> parentNode = stack.pop();
-                list.add(parentNode.val); // add after all left child
-                currNode = parentNode.right;
+                // pop each node from the stack and add value to the list
+                currNode = stack.pop();
+                list.add(currNode.val);
+                // push the right child node if exists
+                currNode = currNode.right;
             }
         }
         return list;
+    }
+
+    public static ArrayList<Integer> inOrderTraversalRec(TreeNode<Integer> root) {
+        ArrayList<Integer> li = new ArrayList<>();
+        helperRecusion(root, li);
+        return li;
+    }
+
+    private static void helperRecusion(TreeNode<Integer> root, ArrayList<Integer> li) {
+        if (root == null) return;
+        helperRecusion(root.left, li);
+        li.add(root.val);
+        helperRecusion(root.right, li);
     }
 
 
@@ -80,7 +99,9 @@ public class InorderTraversal {
         //  /   / \
         // 5   3   6
         Assert.assertEquals("[5, 4, 1, 3, 2, 6]", Arrays.toString(inorderTraversal(a).toArray()));
-        Assert.assertEquals("[5, 4, 1, 3, 2, 6]", Arrays.toString(inorderTraversalIter2(a).toArray()));
+        Assert.assertEquals("[5, 4, 1, 3, 2, 6]", Arrays.toString(inorderTraversalStack(a).toArray()));
+
+        Assert.assertEquals("[5, 4, 1, 3, 2, 6]", Arrays.toString(inOrderTraversalRec(a).toArray()));
     }
 
 }

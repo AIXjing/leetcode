@@ -18,39 +18,72 @@ class PostorderTraversal {
         return result;
     }
 
-    // Iteration using Stack - method 1
+    // traditional iteration method
     public static List<Integer> postorderTraversalStack(TreeNode<Integer> root) {
         Stack<TreeNode<Integer>> stack = new Stack<>();
-        List<Integer> result = new ArrayList<>();
-        TreeNode curr = root;
-        while(curr != null || !stack.empty()) {
-            while (curr != null) {
-                stack.push (curr.left);
-                curr = curr.left;
+        LinkedList<Integer> li = new LinkedList<>();
+        TreeNode<Integer> node = root;
+        while (node != null || !stack.isEmpty()) {
+            while (node != null) {
+                stack.push(node);
+                node = node.left;
             }
-            curr = stack.pop();
-            result.add((Integer) curr.val);
+            // unlike inorder traversal, here we only "peek" the node in the stack
+            // as we need to check if it has right child node
+            node = stack.peek();
+            // if it has, then traverse to the right child node
+            if (node.right != null) {
+                node = node.right;
+            } else {
+                // if it does not have, add this node value to the list
+                node = stack.pop();
+                li.add(node.val);
+                // check if this node is a right child node
+                // if it is, pop out the node and add the value to the list
+                while (!stack.isEmpty() && node == stack.peek().right) {
+                    node = stack.pop();
+                    li.add(node.val);
+                }
+                node = null;
+            }
         }
-        return result;
+        return li;
     }
 
-    // Iteration using Deque - method 2: reverse preorder traversal method
-    public static List<Integer> postorderTraversalStack2(TreeNode<Integer> root) {
-        Deque<TreeNode<Integer>> stack = new ArrayDeque<>();
-        LinkedList<Integer> result = new LinkedList<>();
-        TreeNode<Integer> currNode = root;
-        while(currNode != null || !stack.isEmpty()) {
-            if (currNode != null) {
-                stack.push(currNode);
-                result.addFirst(currNode.val);  // reverse the preorder traversal
-                currNode = currNode.left;
+    // Iteration based on reverse preorder traversal method
+    public static List<Integer> postorderTraversalStackRev(TreeNode<Integer> root) {
+        Stack<TreeNode<Integer>> stack = new Stack<>();
+        LinkedList<Integer> li = new LinkedList<>();
+        TreeNode<Integer> node = root;
+        while(node != null || !stack.isEmpty()) {
+            if (node != null) {
+                stack.push(node);
+                // to reverse preorder traversal,
+                // add the value of each node traversed to the head of the list
+                li.addFirst(node.val);
+                // until the right side bottom
+                node = node.right;
             } else {
-                TreeNode<Integer> parentNode = stack.pop();
-                currNode = parentNode.right;
+                node = stack.pop();
+                node = node.left;
             }
         }
-        return result;
+        return li;
     }
+
+    public static List<Integer> postorderTraversalRec(TreeNode<Integer> root) {
+        List<Integer> li = new ArrayList<>();
+        helperRecursion(root, li);
+        return li;
+    }
+
+    private static void helperRecursion(TreeNode<Integer> root, List<Integer> li) {
+        if (root == null) return;
+        helperRecursion(root.left, li);
+        helperRecursion(root.right, li);
+        li.add(root.val);
+    }
+
 
     public static void main(String[] args) {
         TreeNode<Integer> a = new TreeNode(1);
@@ -69,7 +102,8 @@ class PostorderTraversal {
         //   4   2
         //  /   / \
         // 5   3   6
-        Assert.assertEquals("[5, 4, 3, 6, 2, 1]", Arrays.toString(postorderTraversal(a).toArray()));
+        Assert.assertEquals("[5, 4, 3, 6, 2, 1]", Arrays.toString(postorderTraversalRec(a).toArray()));
+//        Assert.assertEquals("[5, 4, 3, 6, 2, 1]", Arrays.toString(postorderTraversalStack(a).toArray()));
         Assert.assertEquals("[5, 4, 3, 6, 2, 1]", Arrays.toString(postorderTraversalStack(a).toArray()));
     }
 }

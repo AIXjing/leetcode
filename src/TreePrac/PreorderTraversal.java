@@ -37,23 +37,59 @@ class PreorderTraversal {
     }
 
     // using iteration - method 2: using a pointer node and a parent node
-    public static List<Integer> reorderTraversalIter2(TreeNode<Integer> root) {
+    public static List<Integer> preorderTraversalIter2(TreeNode<Integer> root) {
         List<Integer> list = new ArrayList<>();
         Stack<TreeNode<Integer>> stack = new Stack<>();
-        TreeNode<Integer> currNode = root;
-        while (currNode != null || !stack.empty()) {
-            if (currNode != null) {
-                stack.push(currNode);
-                list.add(currNode.val); // add to the list once traverse on it
-                currNode = currNode.left;
+        TreeNode<Integer> node = root;
+        while (node != null || !stack.empty()) {
+            if (node != null) {
+                stack.push(node);
+                list.add(node.val); // add to the list once traverse on it
+                node = node.left;
             } else {
-                TreeNode<Integer> parentNode = stack.pop();
-                currNode = parentNode.right;
+                node = stack.pop();
+                node = node.right;
             }
         }
         return list;
     }
 
+
+    public static ArrayList<Integer> preOrderTraversalStack(TreeNode<Integer> root) {
+        // create a new ArrayList to store values
+        ArrayList<Integer> li = new ArrayList<>();
+        if (root == null) return li;
+        // as it is DFT, uses stack
+        Stack<TreeNode<Integer>> stack = new Stack<>();
+        stack.push(root);
+        while (!stack.isEmpty()) {
+            TreeNode<Integer> node = stack.pop();
+            // add node value to the list before push child nodes to the stack
+            li.add(node.val);
+            // due to FILO manner, push right child node in order to get the left child node
+            if (node.right != null) stack.push(node.right);
+            if (node.left != null) stack.push(node.left);
+        }
+        return li;
+    }
+
+    public static ArrayList<Integer> preOrderTraversalRec(TreeNode<Integer> root) {
+        // create a new ArrayList to store values
+        ArrayList<Integer> li = new ArrayList<>();
+        if (root == null) return li;
+        helperRecursion(root, li);
+        return li;
+    }
+
+    private static void helperRecursion(TreeNode<Integer> root, ArrayList<Integer> li) {
+        if (root == null) return;
+        // Step 1: add node value to the list
+        li.add(root.val);
+        // Step 2: go left
+        helperRecursion(root.left, li);
+        // Step 3: go right
+        helperRecursion(root.right, li);
+    }
 
     public static void main(String[] args) {
         TreeNode<Integer> a = new TreeNode(1);
@@ -76,6 +112,9 @@ class PreorderTraversal {
                 + Arrays.toString(preorderTraversal(a).toArray()));
 
         Assert.assertEquals("[1, 4, 5, 2, 3, 6]", Arrays.toString(preorderTraversalStack(a).toArray()));
-        Assert.assertEquals("[1, 4, 5, 2, 3, 6]", Arrays.toString(reorderTraversalIter2(a).toArray()));
+        Assert.assertEquals("[1, 4, 5, 2, 3, 6]", Arrays.toString(preorderTraversalIter2(a).toArray()));
+
+        Assert.assertEquals("[1, 4, 5, 2, 3, 6]", Arrays.toString(preOrderTraversalStack(a).toArray()));
+        Assert.assertEquals("[1, 4, 5, 2, 3, 6]", Arrays.toString(preOrderTraversalRec(a).toArray()));
     }
 }

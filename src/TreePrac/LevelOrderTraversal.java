@@ -55,6 +55,75 @@ public class LevelOrderTraversal {
         return li;
     }
 
+    // read all nodes in each level - iterative
+    public static List<List<Integer>> levelOrderLists(TreeNode<Integer> root) {
+        List<List<Integer>> results = new ArrayList<>();
+        Queue<TreeNode<Integer>> queue = new LinkedList<>(); // a queue to place each node traversed
+        if (root == null) return results;
+        TreeNode<Integer> node = root;
+        // add a variable to track level
+        queue.add(node);
+        while (!queue.isEmpty()) {
+            List<Integer> li = new ArrayList<>();
+            int level = queue.size();
+            // add the value of the nodes in certain level to the corresponding list
+            for (int i = 0; i < level; i++) {
+                node = queue.remove();
+                li.add(node.val);
+                // if the node has child nodes, then add the child node to the queue and increase the level
+                if (node.left != null) queue.add(node.left);
+                if (node.right != null) queue.add(node.right);
+            }
+            results.add(li);
+        }
+        return results;
+    }
+
+    // read all nodes in each level - recursive
+    public static List<List<Integer>> levelOrderListsRec(TreeNode<Integer> root) {
+        List<List<Integer>> results = new ArrayList<>();
+        helperListsRec(root, results, 0);
+        return results;
+    }
+
+    private static void helperListsRec(TreeNode<Integer> root, List<List<Integer>> results, int level) {
+        if (root == null) return;
+        if (results.size() == level) {
+            results.add(new ArrayList<>());
+        }
+        results.get(level).add(root.val);
+        helperListsRec(root.left, results, level + 1);
+        helperListsRec(root.right, results, level + 1);
+    }
+
+    public static List<Integer> levelOrderStack(TreeNode<Integer> root) {
+        List<Integer> li = new ArrayList<>();
+        if (root == null) return li;
+        Queue<TreeNode<Integer>> queue = new LinkedList<>();
+        TreeNode<Integer> node = root;
+        queue.add(node);
+        while (!queue.isEmpty()) {
+            node = queue.poll();
+            li.add(node.val);
+            if (node.left != null) queue.add(node.left);
+            if (node.right != null) queue.add(node.right);
+        }
+        return li;
+    }
+
+    public static List<Integer> levelOrderRec(TreeNode<Integer> root) {
+        List<Integer> li = new ArrayList<>();
+        helperRecursion(root, li);
+        return li;
+    }
+
+    private static void helperRecursion(TreeNode<Integer> root, List<Integer> li) {
+        if (root == null) return;
+        li.add(root.val);
+        helperRecursion(root.left, li);
+        helperRecursion(root.right, li);
+    }
+
     public static void main(String[] args){
         TreeNode<Integer> a = new TreeNode<>(1);
         TreeNode<Integer> b = new TreeNode<>(2);
@@ -73,7 +142,11 @@ public class LevelOrderTraversal {
         //  /   / \
         // 5   3   6
         Assert.assertEquals("[1, 4, 2, 5, 3, 6]", Arrays.toString(levelOrderList(a).toArray()));
-        Assert.assertEquals("[[1], [4, 2], [5, 3, 6]]", Arrays.toString(levelOrder(a).toArray()));
+        Assert.assertEquals("[1, 4, 2, 5, 3, 6]", Arrays.toString(levelOrderStack(a).toArray()));
+        Assert.assertEquals("[1, 4, 2, 5, 3, 6]", Arrays.toString(levelOrderRec(a).toArray()));
+//        Assert.assertEquals("[[1], [4, 2], [5, 3, 6]]", Arrays.toString(levelOrder(a).toArray()));
         Assert.assertEquals("[[1], [4, 2], [5, 3, 6]]", Arrays.toString(levelOrderRecursion(a).toArray()));
+        Assert.assertEquals("[[1], [4, 2], [5, 3, 6]]", Arrays.toString(levelOrderLists(a).toArray()));
+        Assert.assertEquals("[[1], [4, 2], [5, 3, 6]]", Arrays.toString(levelOrderListsRec(a).toArray()));
     }
 }
