@@ -101,12 +101,12 @@ public class LevelOrderTraversal {
         if (root == null) return li;
         Queue<TreeNode<Integer>> queue = new LinkedList<>();
         TreeNode<Integer> node = root;
-        queue.add(node);
+        queue.offer(node);
         while (!queue.isEmpty()) {
             node = queue.poll();
             li.add(node.val);
-            if (node.left != null) queue.add(node.left);
-            if (node.right != null) queue.add(node.right);
+            if (node.left != null) queue.offer(node.left);
+            if (node.right != null) queue.offer(node.right);
         }
         return li;
     }

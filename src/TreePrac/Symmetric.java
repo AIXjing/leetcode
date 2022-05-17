@@ -4,23 +4,26 @@ import org.junit.Assert;
 
 import java.util.Deque;
 import java.util.LinkedList;
+import java.util.Queue;
 
 public class Symmetric {
+
+    // BST problem using queue
     public static boolean isSymmetric(TreeNode<Integer> root) {
-        Deque<TreeNode<Integer>> deque = new LinkedList<>();
+        Queue<TreeNode<Integer>> queue = new LinkedList<>();
         if (root == null) return true;
-        deque.add(root.left); // LinkedList.add() appends element to the end
-        deque.add(root.right);
-        while (deque.size() > 1) {
-            TreeNode<Integer> left = deque.poll(); // retrieve and remove the head
-            TreeNode<Integer> right = deque.poll();
+        queue.add(root.left); // LinkedList.add() appends element to the end
+        queue.add(root.right);
+        while (queue.size() > 1) {
+            TreeNode<Integer> left = queue.poll(); // retrieve and remove the head
+            TreeNode<Integer> right = queue.poll();
             if ((left == null && right != null) || (right == null && left != null)) return false;
             else if (left == null && right == null) continue;
             else if (left.val != right.val) return false;
-            deque.add(left.left);
-            deque.add(right.right);
-            deque.add(left.right);
-            deque.add(right.left);
+            queue.add(left.left);
+            queue.add(right.right);
+            queue.add(left.right);
+            queue.add(right.left);
         }
         return true;
     }
@@ -56,6 +59,5 @@ public class Symmetric {
         //  /   / \
         // 5   3   6
         Assert.assertEquals(false, isSymmetric(a));
-        Assert.assertEquals(false, isSymmetricRec(a));
     }
 }

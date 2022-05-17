@@ -2,22 +2,22 @@ package TreePrac;
 
 import org.junit.Assert;
 
-import java.util.ArrayDeque;
-import java.util.Deque;
+import java.util.*;
 
 public class MaxDepth {
-    public static int maxDepthIte(TreeNode root) {
+    public static int maxDepthIte(TreeNode<Integer> root) {
+        // BFT using Queue
         if (root == null) return 0;
-        Deque<TreeNode> queue = new ArrayDeque<>();
-        TreeNode p = root;
-        queue.addFirst(p);
+        Queue<TreeNode<Integer>> queue = new LinkedList<>();
+        TreeNode<Integer> p = root;
+        queue.add(p);
         int height = 0;
         while (!queue.isEmpty()) {
             int num = queue.size();
             for (int i = 0; i < num; i++) {
-                p = queue.removeLast();
-                if (p.left != null) queue.addFirst(p.left);
-                if (p.right != null) queue.addFirst(p.right);
+                p = queue.remove();
+                if (p.left != null) queue.add(p.left);
+                if (p.right != null) queue.add(p.right);
             }
             height += 1;
         }
@@ -30,6 +30,7 @@ public class MaxDepth {
         int right = maxDepthRec(root.right);
         return Math.max(left,right) + 1;
     }
+
 
     public static void main(String[] args){
         TreeNode<Integer> a = new TreeNode<>(1);
